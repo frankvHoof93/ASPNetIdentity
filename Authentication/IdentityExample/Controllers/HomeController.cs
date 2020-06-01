@@ -32,6 +32,7 @@ namespace IdentityExample.Controllers
             return View();
         }
 
+        [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
             // Login Functionality
@@ -56,6 +57,7 @@ namespace IdentityExample.Controllers
             return View();
         }
 
+        [HttpPost]
         public async Task<IActionResult> Register(string username, string password)
         {
             // Register Functionality
@@ -63,17 +65,16 @@ namespace IdentityExample.Controllers
             IdentityUser user = new IdentityUser
             {
                 UserName = username,
-                Email = "",
-                PasswordHash = password // Password is salted & hashed before it enters this function (front-end)
+                Email = ""
             };
 
-            var result = await _userManager.CreateAsync(user);
+            var result = await _userManager.CreateAsync(user, password);
 
             if (result.Succeeded)
             {
                 // Sign in user
-                Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(user, password, false, false);
-                if (result.Succeeded)
+                Microsoft.AspNetCore.Identity.SignInResult signInResult = await _signInManager.PasswordSignInAsync(user, password, false, false);
+                if (signInResult.Succeeded)
                 {
                     return RedirectToAction("Index");
                 }

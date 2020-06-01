@@ -25,9 +25,23 @@ namespace IdentityExample
             });
 
             // AddIdentity registers Services for Identity
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<IdentityUser, IdentityRole>(config =>
+            {
+                config.Password.RequireDigit = false;
+                config.Password.RequiredLength = 4;
+                config.Password.RequireLowercase = false;
+                config.Password.RequireNonAlphanumeric = false;
+                config.Password.RequireUppercase = false;
+            })
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.ConfigureApplicationCookie(config =>
+            {
+                config.Cookie.Name = "Identity.Cookie";
+                config.LoginPath = "/Home/Login";
+            });
+
             //services.AddAuthentication("CookieAuth")
             //    .AddCookie("CookieAuth", config =>
             //    {
