@@ -24,11 +24,11 @@ namespace Server
                 {
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Constants.Secret));
 
-                    // READ FROM URL
                     config.Events = new JwtBearerEvents()
                     {
                         OnMessageReceived = context =>
                         {
+                            // READ FROM URL
                             if (context.Request.Query.ContainsKey("access_token"))
                             {
                                 context.Token = context.Request.Query["access_token"];
@@ -46,7 +46,8 @@ namespace Server
                     };
                 });
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews()
+                .AddRazorRuntimeCompilation();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
